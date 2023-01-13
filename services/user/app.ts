@@ -4,6 +4,7 @@ import cors from 'cors'
 
 import userRoutes from './src/routes/user.routes'
 import loggingMiddleware from './src/middleware/logging.middleware'
+import { appLoggerFactory } from './src/utils/logger'
 
 const app = express()
 const server = new http.Server(app)
@@ -36,8 +37,11 @@ server.headersTimeout = 66000
 
 //------------- starting the app
 const start = () => {
+  const productionMode = process.env.NODE_ENV === 'production'
+  const logger = appLoggerFactory(`${name}:${port} - main`, productionMode)
+
   app.listen(port, () => {
-    console.info(`${name} service started in port ${port}`)
+    logger.info(`${name} service started in port ${port}`)
   })
 }
 

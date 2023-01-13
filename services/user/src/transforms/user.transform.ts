@@ -1,14 +1,12 @@
 import { User } from '@prisma/client'
+import { APIUser } from '../../contracts/user.contract'
 
-export interface TransformedUser
-  extends Omit<User, 'password' | 'createdAt' | 'updatedAt'> {}
-
-export function transformUser(data: User): TransformedUser {
+export function transformUser(data: User): APIUser {
   const { password, createdAt, updatedAt, ...transformedUser } = data
 
-  return transformedUser
+  return { discriminator: 'User', ...transformedUser }
 }
 
-export function transformUserArray(data: User[]): TransformedUser[] {
+export function transformUserArray(data: User[]) {
   return data.map((user: User) => transformUser(user))
 }

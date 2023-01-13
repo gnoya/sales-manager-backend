@@ -1,30 +1,59 @@
 import { Request, Response } from 'express'
-import { TypedResponse } from '../models/api.model'
+import { APIUser } from '../../contracts/user.contract'
+import { TypedResponse } from '../utils/typed'
+import { transformUser, transformUserArray } from '../transforms/user.transform'
 import UserRepository from '../repositories/user.repository'
-import {
-  TransformedUser,
-  transformUser,
-  transformUserArray,
-} from '../transforms/user.transform'
+import { internal, thrower } from '../errors/error-handler'
+import indexValidator from '../validators/user/index.validator'
+import showValidator from '../validators/user/show.validator'
+import { ResourceNotFoundError } from '../errors/common'
+import storeValidator from '../validators/user/store.validator'
+import { User } from '@prisma/client'
 
 const userRepository = new UserRepository()
 
 export default class UserController {
-  async index(req: Request, res: TypedResponse<TransformedUser[]>) {
-    const users = await userRepository.index()
-    const transformedUsers = transformUserArray(users)
-    res.json(transformedUsers)
+  /*
+   */
+  async index(req: Request, res: TypedResponse<APIUser[]>) {
+    try {
+      await indexValidator(req, res)
+      const users = await userRepository.index()
+
+      res.json(transformUserArray(users))
+    } catch (error) {
+      internal(req, res, error)
+    }
   }
 
-  async show(req: Request, res: TypedResponse<TransformedUser>) {
-    const user = await userRepository.show(req.params.id)
-    if (!user) return
+  /*
+   */
+  async show(req: Request, res: TypedResponse<APIUser>) {
+    try {
+      const validated = await showValidator(req, res)
+      const user = await userRepository.show(validated.id)
 
-    const transformedUser = transformUser(user)
-    res.json(transformedUser)
+      if (!user) {
+        thrower(req, res, new ResourceNotFoundError())
+        return
+      }
+
+      res.json(transformUser(user))
+    } catch (error) {
+      internal(req, res, error)
+    }
   }
 
+  /*
+   */
   async create(req: Request, res: Response) {
-    res.send(req.body)
+    try {
+      const validated = await storeValidator(req, res)
+      await userRepository.store(validated as User)
+
+      res.status(201).send({})
+    } catch (error) {
+      internal(req, res, error)
+    }
   }
 }

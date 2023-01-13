@@ -5,15 +5,15 @@ import ApplicationPrisma from '../database/application.prisma'
 const prisma = ApplicationPrisma.client
 
 export default class UserRepository {
-  async show(id: string): Promise<User | null> {
-    return prisma.user.findFirst({ where: { id } })
-  }
-
   async index(): Promise<User[]> {
     return prisma.user.findMany()
   }
 
-  async create(data: User): Promise<User> {
+  async show(id: string): Promise<User | null> {
+    return prisma.user.findFirst({ where: { id } })
+  }
+
+  async store(data: User): Promise<User> {
     return prisma.user.create({ data })
   }
 
@@ -21,7 +21,7 @@ export default class UserRepository {
     return prisma.user.update({ data, where: { id } })
   }
 
-  async delete(id: string): Promise<User> {
+  async destroy(id: string): Promise<User> {
     return prisma.user.delete({ where: { id } })
   }
 }
