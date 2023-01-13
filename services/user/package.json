@@ -12,7 +12,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "ts-node prisma/seeders",
     "migrate": "npx prisma migrate dev",
-    "start:test": "set NODE_ENV=test&& npx nodemon app.ts"
+    "start:test": "set NODE_ENV=test&& npx nodemon app.ts",
+    "prisma-reset": "npx prisma migrate reset && npx prisma migrate dev && ts-node prisma/seeders"
   },
   "author": "",
   "license": "ISC",

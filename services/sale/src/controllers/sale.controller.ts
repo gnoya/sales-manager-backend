@@ -48,8 +48,14 @@ export default class SaleController {
    */
   async create(req: Request, res: Response) {
     try {
-      const validated = await storeValidator(req, res)
-      // await saleRepository.store(validated as Sale)
+      const { product, user, ...validated } = await storeValidator(req, res)
+      const newSale = {
+        ...validated,
+        price: product.price,
+        profit: product.profit,
+      }
+
+      await saleRepository.store(newSale as Sale)
 
       res.status(201).send({})
     } catch (error) {

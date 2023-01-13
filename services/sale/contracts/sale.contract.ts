@@ -7,8 +7,13 @@ export interface APISale {
   deliveryDate: string
 }
 
+interface SaleCreateParams extends Omit<APISale, 'discriminator' | 'id' | ''> {}
+
+export const url = 'http://localhost:3003'
+
 export interface ContractSaleService {
   show?: (id: string) => Promise<APISale>
+  create?: (params: SaleCreateParams) => Promise<APISale>
 }
 
 export class MockSaleService implements ContractSaleService {

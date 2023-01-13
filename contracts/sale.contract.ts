@@ -1,11 +1,15 @@
 export interface APISale {
   discriminator: 'Sale'
   id: string
-  name: string
+  productId: string
+  userId: string
   quantity: number
+  deliveryDate: string
 }
 
 interface SaleCreateParams extends Omit<APISale, 'discriminator' | 'id' | ''> {}
+
+export const url = 'http://localhost:3003'
 
 export interface ContractSaleService {
   show?: (id: string) => Promise<APISale>
@@ -25,8 +29,10 @@ export class MockSaleService implements ContractSaleService {
     return {
       discriminator: 'Sale' as const,
       id: 'facade01-0000-4000-a000-000000000000',
-      name: 'iPhone X',
-      quantity: 2,
+      productId: 'facade01-0000-4000-a000-000000000000',
+      userId: 'facade01-0000-4000-a000-000000000000',
+      quantity: 1,
+      deliveryDate: '2023-01-01 18:00:00',
     }
   }
 }

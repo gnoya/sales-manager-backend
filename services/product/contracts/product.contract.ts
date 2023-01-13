@@ -3,10 +3,14 @@ export interface APIProduct {
   id: string
   name: string
   quantity: number
+  price: number
+  profit: number
 }
 
 interface ProductCreateParams
-  extends Omit<APIProduct, 'discriminator' | 'id'> {}
+  extends Omit<APIProduct, 'discriminator' | 'id' | ''> {}
+
+export const url = 'http://localhost:3002'
 
 export interface ContractProductService {
   show?: (id: string) => Promise<APIProduct>
@@ -29,6 +33,8 @@ export class MockProductService implements ContractProductService {
       id: 'facade01-0000-4000-a000-000000000000',
       name: 'iPhone X',
       quantity: 2,
+      price: 50,
+      profit: 30,
     }
   }
 }

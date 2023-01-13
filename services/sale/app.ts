@@ -12,7 +12,7 @@ const server = new http.Server(app)
 //------------- parse args
 const { name, port, listen } = {
   name: 'Sale',
-  port: 3001,
+  port: 3003,
   listen: true,
 }
 
