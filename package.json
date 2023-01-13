@@ -1,0 +1,27 @@
+{
+  "name": "sales-manager-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "start.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx nodemon start.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gnoya/sales-manager-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gnoya/sales-manager-backend/issues"
+  },
+  "homepage": "https://github.com/gnoya/sales-manager-backend#readme",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "ts-node": "^10.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18"
+  }
+}

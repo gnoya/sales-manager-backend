@@ -9,7 +9,7 @@ export interface APISale {
 
 interface SaleCreateParams extends Omit<APISale, 'discriminator' | 'id' | ''> {}
 
-export const url = 'http://localhost:3003'
+export const url = 'http://localhost:3104'
 
 export interface ContractSaleService {
   show?: (id: string) => Promise<APISale>
