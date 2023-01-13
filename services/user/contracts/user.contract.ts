@@ -10,6 +10,8 @@ export interface APIUser {
 
 interface UserCreateParams extends Omit<APIUser, 'discriminator' | 'id'> {}
 
+export const url = 'http://localhost:3102'
+
 export interface ContractUserService {
   show?: (id: string) => Promise<APIUser>
   create?: (params: UserCreateParams) => Promise<APIUser>

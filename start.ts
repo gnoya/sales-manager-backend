@@ -1,25 +1,11 @@
 const { fork } = require('child_process')
-import { Dirent, readdir } from 'fs'
+import { Dirent, readdirSync } from 'fs'
+import exportContracts from './contracts/export'
 
-const getDirectories = (
-  source: string,
-  callback: (folders: string[]) => void
-) =>
-  readdir(
-    source,
-    { withFileTypes: true },
-    (err: NodeJS.ErrnoException | null, files: Dirent[]) => {
-      if (err) {
-        throw err
-      } else {
-        callback(
-          files
-            .filter((dirent: Dirent) => dirent.isDirectory())
-            .map((dirent: Dirent) => dirent.name)
-        )
-      }
-    }
-  )
+const getDirectories = (source: string) =>
+  readdirSync(source, { withFileTypes: true })
+    .filter((dirent: Dirent) => dirent.isDirectory())
+    .map((dirent: Dirent) => dirent.name)
 
 const startServices = (services: string[]) =>
   services.forEach((service) => {
@@ -39,4 +25,5 @@ const startServices = (services: string[]) =>
     })
   })
 
-getDirectories('./services', startServices)
+exportContracts()
+startServices(getDirectories('./services'))

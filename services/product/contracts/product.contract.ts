@@ -10,11 +10,12 @@ export interface APIProduct {
 interface ProductCreateParams
   extends Omit<APIProduct, 'discriminator' | 'id' | ''> {}
 
-export const url = 'http://localhost:3002'
+export const url = 'http://localhost:3103'
 
 export interface ContractProductService {
   show?: (id: string) => Promise<APIProduct>
   create?: (params: ProductCreateParams) => Promise<APIProduct>
+  subtract?: (id: string) => void
 }
 
 export class MockProductService implements ContractProductService {
