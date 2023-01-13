@@ -1,0 +1,20 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DB_URL")
+}
+
+model Sale {
+  id           String   @id @default(uuid())
+  productId    String
+  userId       String
+  quantity     Int
+  deliveryDate String
+  price        Float
+  profit       Float
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
