@@ -6,9 +6,6 @@ import { BadRequestError, ResourceNotFoundError } from '../../errors/common'
 import UserService from '../../services/user.service'
 import ProductService from '../../services/product.service'
 
-const userService = new UserService()
-const productService = new ProductService()
-
 export default async function storeValidator(req: Request, res: Response) {
   const schema = z.promise(
     z.object({
@@ -26,6 +23,9 @@ export default async function storeValidator(req: Request, res: Response) {
   const validated = await schema
     .parseAsync(fields)
     .catch(catcher(req, res, new BadRequestError()))
+
+  const userService = new UserService(req, res)
+  const productService = new ProductService(req, res)
 
   const product = await productService
     .show(validated.productId)

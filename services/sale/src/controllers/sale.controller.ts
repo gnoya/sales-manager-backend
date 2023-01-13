@@ -9,6 +9,7 @@ import showValidator from '../validators/sale/show.validator'
 import { ResourceNotFoundError } from '../errors/common'
 import storeValidator from '../validators/sale/store.validator'
 import { Sale } from '@prisma/client'
+import ProductService from '../services/product.service'
 
 const saleRepository = new SaleRepository()
 
@@ -56,6 +57,9 @@ export default class SaleController {
       }
 
       await saleRepository.store(newSale as Sale)
+
+      const productService = new ProductService(req, res)
+      await productService.subtract(product.id)
 
       res.status(201).send({})
     } catch (error) {

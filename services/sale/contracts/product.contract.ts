@@ -15,6 +15,7 @@ export const url = 'http://localhost:3002'
 export interface ContractProductService {
   show?: (id: string) => Promise<APIProduct>
   create?: (params: ProductCreateParams) => Promise<APIProduct>
+  subtract?: (id: string) => void
 }
 
 export class MockProductService implements ContractProductService {

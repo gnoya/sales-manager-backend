@@ -9,7 +9,7 @@ import ProductRepository from '../repositories/product.repository'
 import { internal, thrower } from '../errors/error-handler'
 import indexValidator from '../validators/product/index.validator'
 import showValidator from '../validators/product/show.validator'
-import { ResourceNotFoundError } from '../errors/common'
+import { BadRequestError, ResourceNotFoundError } from '../errors/common'
 import storeValidator from '../validators/product/store.validator'
 import { Product } from '@prisma/client'
 
@@ -55,6 +55,34 @@ export default class ProductController {
       await productRepository.store(validated as Product)
 
       res.status(201).send({})
+    } catch (error) {
+      internal(req, res, error)
+    }
+  }
+
+  /*
+   */
+  async subtract(req: Request, res: Response) {
+    try {
+      const validated = await showValidator(req, res)
+      const product = await productRepository.show(validated.id)
+
+      if (!product) {
+        thrower(req, res, new ResourceNotFoundError())
+        return
+      }
+
+      if (product.quantity === 0) {
+        thrower(req, res, new BadRequestError('Not enought inventory'))
+        return
+      }
+
+      // Subtract one to quantity
+      await productRepository.update(product.id, {
+        quantity: product.quantity - 1,
+      } as Product)
+
+      res.status(202).send({})
     } catch (error) {
       internal(req, res, error)
     }
