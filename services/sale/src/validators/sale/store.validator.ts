@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { z } from 'zod'
 import * as R from 'ramda'
 import { catcher } from '../../errors/error-handler'
@@ -27,12 +27,12 @@ export default async function storeValidator(req: Request, res: Response) {
   const userService = new UserService(req, res)
   const productService = new ProductService(req, res)
 
-  const product = await productService
-    .show(validated.productId)
-    .catch(catcher(req, res, new ResourceNotFoundError()))
-
   const user = await userService
     .show(validated.userId)
+    .catch(catcher(req, res, new ResourceNotFoundError()))
+
+  const product = await productService
+    .show(validated.productId)
     .catch(catcher(req, res, new ResourceNotFoundError()))
 
   return { ...validated, product, user }

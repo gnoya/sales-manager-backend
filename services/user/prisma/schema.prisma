@@ -14,7 +14,7 @@ model User {
   fullName       String
   identification String
   address        String
-  phone          String?
+  phone          String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }

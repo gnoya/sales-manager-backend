@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { z } from 'zod'
 import * as R from 'ramda'
 import { catcher } from '../../errors/error-handler'
@@ -10,7 +10,7 @@ export default async function storeValidator(req: Request, res: Response) {
       fullName: z.string(),
       identification: z.string(),
       address: z.string(),
-      phone: z.string().optional(),
+      phone: z.string(),
     })
   )
 
