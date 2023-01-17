@@ -24,4 +24,8 @@ export default class UserRepository {
   async destroy(id: string): Promise<User> {
     return prisma.user.delete({ where: { id } })
   }
+
+  async showByEmail(email: string): Promise<User | null> {
+    return prisma.user.findFirst({ where: { email } })
+  }
 }

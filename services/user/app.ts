@@ -6,13 +6,16 @@ import userRoutes from './src/routes/user.routes'
 import loggingMiddleware from './src/middleware/logging.middleware'
 import { appLoggerFactory } from './src/utils/logger'
 
+import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+dotenv.config()
+
 const app = express()
 const server = new http.Server(app)
 
-//------------- parse args
+//------------- parse env vars
 const { name, port, listen } = {
-  name: 'User',
-  port: 3001,
+  name: process.env.SERVICE_NAME,
+  port: process.env.SERVICE_PORT,
   listen: true,
 }
 

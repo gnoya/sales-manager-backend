@@ -17,7 +17,7 @@ export default class ProductService implements ContractProductService {
     this.res = res
   }
 
-  async show(id: string) {
+  async show(id: string): Promise<APIProduct> {
     const response = await axios
       .get(`${url}/products/${id}`)
       .catch(catcher(this.req, this.res))
@@ -25,7 +25,7 @@ export default class ProductService implements ContractProductService {
     return response.data as APIProduct
   }
 
-  async subtract(id: string) {
+  async subtract(id: string): Promise<void> {
     await axios
       .put(`${url}/products/${id}/subtract`)
       .catch((error: AxiosError) => {

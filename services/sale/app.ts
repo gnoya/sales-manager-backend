@@ -9,10 +9,10 @@ import { appLoggerFactory } from './src/utils/logger'
 const app = express()
 const server = new http.Server(app)
 
-//------------- parse args
+//------------- parse env vars
 const { name, port, listen } = {
-  name: 'Sale',
-  port: 3003,
+  name: process.env.SERVICE_NAME,
+  port: process.env.SERVICE_PORT,
   listen: true,
 }
 

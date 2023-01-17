@@ -2,7 +2,7 @@ import http from 'http'
 import express, { json } from 'express'
 import cors from 'cors'
 
-import productRoutes from './src/routes/product.routes'
+import authRoutes from './src/routes/auth.routes'
 import loggingMiddleware from './src/middleware/logging.middleware'
 import { appLoggerFactory } from './src/utils/logger'
 
@@ -29,7 +29,7 @@ app.use(loggingMiddleware)
 app.get('/healthCheck', (req, res) => res.json('ok'))
 
 //------------- routes
-app.use('/products', productRoutes)
+app.use('/auth', authRoutes)
 
 //------------- keep alive
 server.keepAliveTimeout = 65000

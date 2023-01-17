@@ -1,9 +1,10 @@
 import { Dirent, readdirSync, createReadStream, createWriteStream } from 'fs'
 
 const exportingConfiguration: Record<string, string[]> = {
-  user: ['user', 'sale'],
+  user: ['user', 'sale', 'auth'],
   product: ['product', 'sale'],
   sale: ['sale'],
+  auth: ['auth'],
 }
 
 const getContractFileNames = (source: string): string[] =>
@@ -49,3 +50,4 @@ export default function exportContracts() {
   assertExportConfiguration(contractFileNames)
   exportContractFiles(contractFileNames)
 }
+exportContracts()

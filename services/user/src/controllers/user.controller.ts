@@ -9,6 +9,7 @@ import showValidator from '../validators/user/show.validator'
 import { ResourceNotFoundError } from '../errors/common'
 import storeValidator from '../validators/user/store.validator'
 import { User } from '@prisma/client'
+import showByEmailValidator from '../validators/user/show-by-email.validator'
 
 const userRepository = new UserRepository()
 
@@ -52,6 +53,27 @@ export default class UserController {
       await userRepository.store(validated as User)
 
       res.status(201).send({})
+    } catch (error) {
+      internal(req, res, error)
+    }
+  }
+
+  /*
+   */
+  async showByEmail(req: Request, res: TypedResponse<APIUser>) {
+    try {
+      const validated = await showByEmailValidator(req, res)
+      const user = await userRepository.showByEmail(validated.email)
+
+      if (!user || !user.password) {
+        thrower(req, res, new ResourceNotFoundError())
+        return
+      }
+
+      const transformedUser = transformUser(user)
+      transformedUser.password = user.password
+
+      res.json(transformedUser)
     } catch (error) {
       internal(req, res, error)
     }
