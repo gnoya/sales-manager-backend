@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `JWT` MODIFY `secret` TEXT NOT NULL;
