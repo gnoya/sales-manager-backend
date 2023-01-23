@@ -4,13 +4,17 @@ const exportingConfiguration: Record<string, string[]> = {
   user: ['user', 'sale', 'auth'],
   product: ['product', 'sale'],
   sale: ['sale'],
-  auth: ['auth'],
+  auth: ['auth', 'gateway'],
+  gateway: [],
 }
 
 const getContractFileNames = (source: string): string[] =>
   readdirSync(source, { withFileTypes: true })
     .filter(
-      (dirent: Dirent) => !dirent.isDirectory() && dirent.name !== 'export.ts'
+      (dirent: Dirent) =>
+        !dirent.isDirectory() &&
+        dirent.name !== 'export.ts' &&
+        dirent.name !== 'urls.config.ts'
     )
     .map((dirent: Dirent) => dirent.name)
 
@@ -37,7 +41,6 @@ const exportContractFiles = (fileNames: string[]) => {
       console.log(
         `Exporting ${fileName} to ${service} service at ${exportPath}`
       )
-
       createReadStream(`${__dirname}/${fileName}`).pipe(
         createWriteStream(exportPath)
       )
@@ -45,9 +48,22 @@ const exportContractFiles = (fileNames: string[]) => {
   })
 }
 
+const exportUrls = () => {
+  console.log('Exporting URLs:')
+  for (let service in exportingConfiguration) {
+    const exportPath = `${__dirname}/../services/${service}/contracts/urls.config.ts`
+    console.log(
+      `Exporting urls.config.ts to ${service} service at ${exportPath}`
+    )
+    createReadStream(`${__dirname}/urls.config.ts`).pipe(
+      createWriteStream(exportPath)
+    )
+  }
+}
+
 export default function exportContracts() {
   const contractFileNames = getContractFileNames(__dirname)
   assertExportConfiguration(contractFileNames)
   exportContractFiles(contractFileNames)
+  exportUrls()
 }
-exportContracts()

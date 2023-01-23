@@ -5,6 +5,8 @@ import cors from 'cors'
 import productRoutes from './src/routes/product.routes'
 import loggingMiddleware from './src/middleware/logging.middleware'
 import { appLoggerFactory } from './src/utils/logger'
+import * as dotenv from 'dotenv'
+dotenv.config({ path: __dirname + '/.env' })
 
 const app = express()
 const server = new http.Server(app)

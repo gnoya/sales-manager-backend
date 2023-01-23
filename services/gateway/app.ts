@@ -2,9 +2,10 @@ import http from 'http'
 import express, { json } from 'express'
 import cors from 'cors'
 
-import authRoutes from './src/routes/auth.routes'
+import gatewayRoutes from './src/routes/gateway.routes'
 import loggingMiddleware from './src/middleware/logging.middleware'
 import { appLoggerFactory } from './src/utils/logger'
+
 import * as dotenv from 'dotenv'
 dotenv.config({ path: __dirname + '/.env' })
 
@@ -31,7 +32,7 @@ app.use(loggingMiddleware)
 app.get('/healthCheck', (req, res) => res.json('ok'))
 
 //------------- routes
-app.use('/auth', authRoutes)
+app.use('/g', gatewayRoutes)
 
 //------------- keep alive
 server.keepAliveTimeout = 65000

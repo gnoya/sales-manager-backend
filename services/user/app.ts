@@ -6,8 +6,8 @@ import userRoutes from './src/routes/user.routes'
 import loggingMiddleware from './src/middleware/logging.middleware'
 import { appLoggerFactory } from './src/utils/logger'
 
-import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-dotenv.config()
+import * as dotenv from 'dotenv'
+dotenv.config({ path: __dirname + '/.env' })
 
 const app = express()
 const server = new http.Server(app)
