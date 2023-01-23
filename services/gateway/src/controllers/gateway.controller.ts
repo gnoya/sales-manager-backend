@@ -33,7 +33,7 @@ export default class GatewayController {
     }
 
     // ----------- Redirect
-    const redirectUrl = `${redirectService.url}:${redirectService.port}`
+    const redirectUrl = redirectService.url
 
     if (redirectUrl) {
       proxy.web(req, res, { target: redirectUrl, changeOrigin: true })
