@@ -18,9 +18,13 @@ export default class SaleController {
    */
   async index(req: Request, res: TypedResponse<APISale[]>) {
     try {
+      // Validate request parameters
       await indexValidator(req, res)
+
+      // Fetch sales from database
       const sales = await saleRepository.index()
 
+      // Send the response after we transform the data
       res.json(transformSaleArray(sales))
     } catch (error) {
       internal(req, res, error)
@@ -31,14 +35,19 @@ export default class SaleController {
    */
   async show(req: Request, res: TypedResponse<APISale>) {
     try {
+      // Validate request parameters
       const validated = await showValidator(req, res)
+
+      // Fetch sale from database
       const sale = await saleRepository.show(validated.id)
 
+      // If the sale is not found return 404 not found
       if (!sale) {
         thrower(req, res, new ResourceNotFoundError())
         return
       }
 
+      // Send the response after we transform the data
       res.json(transformSale(sale))
     } catch (error) {
       internal(req, res, error)
@@ -47,8 +56,9 @@ export default class SaleController {
 
   /*
    */
-  async create(req: Request, res: Response) {
+  async create(req: Request, res: TypedResponse<APISale>) {
     try {
+      // Validate request parameters
       const { product, user, ...validated } = await storeValidator(req, res)
       const newSale = {
         ...validated,
@@ -56,12 +66,15 @@ export default class SaleController {
         profit: product.profit,
       }
 
-      await saleRepository.store(newSale as Sale)
-
+      // Subtract inventory from product service
       const productService = new ProductService(req, res)
       await productService.subtract(product.id)
 
-      res.status(201).send({})
+      // Create this new sale in the database
+      const sale = await saleRepository.store(newSale as Sale)
+
+      // Send the response after we transform the data
+      res.status(201).json(transformSale(sale))
     } catch (error) {
       internal(req, res, error)
     }

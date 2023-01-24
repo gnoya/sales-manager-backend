@@ -19,9 +19,6 @@ const { name, port, listen } = {
   listen: true,
 }
 
-//------------- parsing body
-app.use(json())
-
 //------------- cors
 app.use(cors())
 

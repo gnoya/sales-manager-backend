@@ -11,7 +11,7 @@ export default async function storeValidator(req: Request, res: Response) {
     z.object({
       productId: z.string().uuid(),
       userId: z.string().uuid(),
-      quantity: z.number(),
+      quantity: z.number().min(1),
       deliveryDate: z.string(),
     })
   )
@@ -24,13 +24,16 @@ export default async function storeValidator(req: Request, res: Response) {
     .parseAsync(fields)
     .catch(catcher(req, res, new BadRequestError()))
 
+  // Initialize service communication
   const userService = new UserService(req, res)
   const productService = new ProductService(req, res)
 
+  // Fetch the user from the user microservice
   const user = await userService
     .show(validated.userId)
     .catch(catcher(req, res, new ResourceNotFoundError()))
 
+  // Fetch the product from the product microservice
   const product = await productService
     .show(validated.productId)
     .catch(catcher(req, res, new ResourceNotFoundError()))

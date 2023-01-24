@@ -7,12 +7,13 @@ import AppLogger from '../utils/Logger'
 
 const env: Env = (process.env.NODE_ENV as Env) || 'development'
 
-const proxy = httpProxy.createProxyServer({})
+const proxy = httpProxy.createProxyServer({ secure: false })
 const logger = new AppLogger()
 
 export default class GatewayController {
   constructor() {
     proxy.on('error', (error: any, req, res) => {
+      console.log('error')
       if (!req.url?.includes('socket.io')) {
         logger.error(`API gateway disconnect on URL ${req.url}`)
         logger.error(error)
@@ -24,17 +25,22 @@ export default class GatewayController {
   /*
    */
   async gateway(req: Request, res: Response) {
+    // Get the service name from the URL
     const serviceName = getServiceName(req.originalUrl)
+
+    // Get the service's URL info using the env and the service name
     const redirectService = urls[env][serviceName]
 
+    // If the service is not found return 404 not found
     if (!redirectService) {
       errorHandler(req, res, new ResourceNotFoundError())
       return
     }
 
-    // ----------- Redirect
+    // Extract service's url
     const redirectUrl = redirectService.url
 
+    // If url is defined, proxy to it
     if (redirectUrl) {
       proxy.web(req, res, { target: redirectUrl, changeOrigin: true })
     } else {
@@ -44,5 +50,6 @@ export default class GatewayController {
   }
 }
 
+// Get the name from the URL and returns it in singular
 const getServiceName = (url: string) =>
   url.split('/g/')[1].split('/')[0].replace(/s$/, '')
