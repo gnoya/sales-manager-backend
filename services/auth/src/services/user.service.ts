@@ -17,10 +17,11 @@ export default class UserService implements ContractUserService {
   }
 
   async showByEmail(email: string) {
-    const response = await axios
-      .get(`${this.url}/users/email/${email}`)
-      .catch(catcher(this.req, this.res))
-
-    return response.data as APIUser
+    try {
+      const response = await axios.get(`${this.url}/users/email/${email}`)
+      return response.data as APIUser
+    } catch (err) {
+      return null
+    }
   }
 }

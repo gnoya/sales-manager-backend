@@ -13,7 +13,7 @@ interface UserCreateParams extends Omit<APIUser, 'discriminator' | 'id'> {}
 
 export interface ContractUserService {
   show?: (id: string) => Promise<APIUser>
-  showByEmail?: (id: string) => Promise<APIUser>
+  showByEmail?: (id: string) => Promise<APIUser | null>
   create?: (params: UserCreateParams) => Promise<APIUser>
 }
 

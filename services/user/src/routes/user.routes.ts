@@ -7,6 +7,7 @@ const userRoutes = Router()
 userRoutes.get('/:id', userController.show)
 userRoutes.get('/', userController.index)
 userRoutes.post('/', userController.create)
+userRoutes.delete('/:id', userController.destroy)
 userRoutes.get('/email/:email', userController.showByEmail)
 
 export default userRoutes

@@ -73,6 +73,23 @@ export default class UserController {
 
   /*
    */
+  async destroy(req: Request, res: Response) {
+    try {
+      // Validate request parameters
+      const validated = await showValidator(req, res)
+
+      // Update the user in the database
+      await userRepository.destroy(validated.id)
+
+      // Send the response
+      res.status(200).json({})
+    } catch (error) {
+      internal(req, res, error)
+    }
+  }
+
+  /*
+   */
   async showByEmail(req: Request, res: TypedResponse<APIUser>) {
     try {
       // Validate request parameters

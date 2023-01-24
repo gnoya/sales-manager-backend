@@ -79,4 +79,21 @@ export default class SaleController {
       internal(req, res, error)
     }
   }
+
+  /*
+   */
+  async destroy(req: Request, res: Response) {
+    try {
+      // Validate request parameters
+      const validated = await showValidator(req, res)
+
+      // Update the sale in the database
+      await saleRepository.destroy(validated.id)
+
+      // Send the response
+      res.status(200).json({})
+    } catch (error) {
+      internal(req, res, error)
+    }
+  }
 }

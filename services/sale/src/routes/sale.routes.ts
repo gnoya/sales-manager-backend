@@ -7,5 +7,6 @@ const saleRoutes = Router()
 saleRoutes.get('/:id', saleController.show)
 saleRoutes.get('/', saleController.index)
 saleRoutes.post('/', saleController.create)
+saleRoutes.delete('/:id', saleController.destroy)
 
 export default saleRoutes

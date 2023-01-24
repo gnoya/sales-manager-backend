@@ -12,6 +12,7 @@ import showValidator from '../validators/product/show.validator'
 import { BadRequestError, ResourceNotFoundError } from '../errors/common'
 import storeValidator from '../validators/product/store.validator'
 import { Product } from '@prisma/client'
+import updateValidator from '../validators/product/update.validatory'
 
 const productRepository = new ProductRepository()
 
@@ -68,6 +69,43 @@ export default class ProductController {
 
       // Send the response after we transform the data
       res.status(201).json(transformProduct(product))
+    } catch (error) {
+      internal(req, res, error)
+    }
+  }
+
+  /*
+   */
+  async update(req: Request, res: Response) {
+    try {
+      // Validate request parameters
+      const validated = await updateValidator(req, res)
+
+      // Update the product in the database
+      const product = await productRepository.update(
+        validated.id,
+        validated as Product
+      )
+
+      // Send the response after we transform the data
+      res.status(202).json(transformProduct(product))
+    } catch (error) {
+      internal(req, res, error)
+    }
+  }
+
+  /*
+   */
+  async destroy(req: Request, res: Response) {
+    try {
+      // Validate request parameters
+      const validated = await showValidator(req, res)
+
+      // Update the product in the database
+      await productRepository.destroy(validated.id)
+
+      // Send the response
+      res.status(200).json({})
     } catch (error) {
       internal(req, res, error)
     }
