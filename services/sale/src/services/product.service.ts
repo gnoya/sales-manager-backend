@@ -4,8 +4,7 @@ import {
   APIProduct,
   ContractProductService,
 } from '../../contracts/product.contract'
-import { urls } from '../../contracts/urls'
-import { Env } from '../../contracts/urls.config'
+import { Env, urls } from '../../contracts/urls.config'
 import { BadRequestError } from '../errors/common'
 import { catcher } from '../errors/error-handler'
 const env: Env = (process.env.NODE_ENV as Env) || 'development'

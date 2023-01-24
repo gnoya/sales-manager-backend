@@ -4,6 +4,6 @@
   "ignore": [
     "./**/*.spec.ts",
     "./services/**/*.contract.ts",
-    "./services/**/urls.config.ts"
+    "./services/**/*.config.ts"
   ]
 }

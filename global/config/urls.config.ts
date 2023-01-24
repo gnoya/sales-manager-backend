@@ -1,6 +1,7 @@
 export interface Service {
   url: string
 }
+
 export type Env = 'development' | 'test' | 'production'
 
 export const urls: Record<Env, Record<string, Service>> = {

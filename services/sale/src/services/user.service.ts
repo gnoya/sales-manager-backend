@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { Request, Response } from 'express'
-import { urls } from '../../contracts/urls'
-import { Env } from '../../contracts/urls.config'
+import { Env, urls } from '../../contracts/urls.config'
 import { APIUser, ContractUserService } from '../../contracts/user.contract'
 import { catcher } from '../errors/error-handler'
 const env: Env = (process.env.NODE_ENV as Env) || 'development'

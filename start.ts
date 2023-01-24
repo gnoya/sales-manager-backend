@@ -1,11 +1,6 @@
 const { fork } = require('child_process')
-import { Dirent, readdirSync } from 'fs'
-import exportContracts from './contracts/export'
-
-const getDirectories = (source: string) =>
-  readdirSync(source, { withFileTypes: true })
-    .filter((dirent: Dirent) => dirent.isDirectory())
-    .map((dirent: Dirent) => dirent.name)
+import exportGlobal from './global/export'
+import { getDirectories } from './global/utils/utils'
 
 const startServices = (services: string[]) =>
   services.forEach((service) => {
@@ -25,5 +20,5 @@ const startServices = (services: string[]) =>
     })
   })
 
-exportContracts()
+exportGlobal()
 startServices(getDirectories('./services'))
