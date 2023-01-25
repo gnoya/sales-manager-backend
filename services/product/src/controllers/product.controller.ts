@@ -13,6 +13,7 @@ import { BadRequestError, ResourceNotFoundError } from '../errors/common'
 import storeValidator from '../validators/product/store.validator'
 import { Product } from '@prisma/client'
 import updateValidator from '../validators/product/update.validatory'
+import batchValidator from '../validators/product/batch.validator'
 
 const productRepository = new ProductRepository()
 
@@ -43,6 +44,23 @@ export default class ProductController {
         data: transformProductArray(products),
         links: { count, pages },
       })
+    } catch (error) {
+      internal(req, res, error)
+    }
+  }
+
+  /*
+   */
+  async batch(req: Request, res: TypedResponse<{ data: APIProduct[] }>) {
+    try {
+      // Validate request parameters
+      const validated = await batchValidator(req, res)
+
+      // Get products in batch from the database
+      const products = await productRepository.batch(validated.ids)
+
+      // Send the response after we transform the data
+      res.json({ data: transformProductArray(products) })
     } catch (error) {
       internal(req, res, error)
     }

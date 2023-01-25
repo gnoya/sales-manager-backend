@@ -5,6 +5,7 @@ const productController = new ProductController()
 const productRoutes = Router()
 
 productRoutes.put('/:id/subtract', productController.subtract)
+productRoutes.get('/batch', productController.batch)
 productRoutes.get('/:id', productController.show)
 productRoutes.get('/', productController.index)
 productRoutes.post('/', productController.create)

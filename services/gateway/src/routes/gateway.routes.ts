@@ -18,6 +18,7 @@ gateway.get('/sales', JWTMiddleware, gatewayController.gateway)
 gateway.post('/sales', JWTMiddleware, gatewayController.gateway)
 gateway.delete('/sales/:id', JWTMiddleware, gatewayController.gateway)
 
+gateway.get('/products/batch', JWTMiddleware, gatewayController.gateway)
 gateway.get('/products/:id', JWTMiddleware, gatewayController.gateway)
 gateway.get('/products', JWTMiddleware, gatewayController.gateway)
 gateway.post('/products', JWTMiddleware, gatewayController.gateway)

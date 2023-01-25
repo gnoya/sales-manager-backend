@@ -26,6 +26,16 @@ export default class ProductRepository {
     })
   }
 
+  async batch(ids: string[]): Promise<Product[]> {
+    return prisma.product.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    })
+  }
+
   async countAll(filters: { name?: string }): Promise<number> {
     return prisma.product.count({
       where: {
