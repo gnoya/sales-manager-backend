@@ -5,8 +5,20 @@ import ApplicationPrisma from '../database/application.prisma'
 const prisma = ApplicationPrisma.client
 
 export default class SaleRepository {
-  async index(): Promise<Sale[]> {
-    return prisma.sale.findMany()
+  async index(
+    pagination: { page?: number; limit?: number },
+    filters: {}
+  ): Promise<Sale[]> {
+    const page = pagination.page || 1
+    const limit = pagination.limit || 10
+
+    return prisma.sale.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
   }
 
   async show(id: string): Promise<Sale | null> {

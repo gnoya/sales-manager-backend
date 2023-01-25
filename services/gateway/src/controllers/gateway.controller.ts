@@ -52,4 +52,4 @@ export default class GatewayController {
 
 // Get the name from the URL and returns it in singular
 const getServiceName = (url: string) =>
-  url.split('/g/')[1].split('/')[0].replace(/s$/, '')
+  url.split('/g/')[1].split('/')[0].split('?')[0].replace(/s$/, '')

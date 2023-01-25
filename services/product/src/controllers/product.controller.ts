@@ -22,10 +22,11 @@ export default class ProductController {
   async index(req: Request, res: TypedResponse<APIProduct[]>) {
     try {
       // Validate request parameters
-      await indexValidator(req, res)
+      const validated = await indexValidator(req, res)
+      const { name, ...pagination } = validated
 
       // Fetch products from the database
-      const products = await productRepository.index()
+      const products = await productRepository.index(pagination, { name })
 
       // Send the response after we transform the data
       res.json(transformProductArray(products))

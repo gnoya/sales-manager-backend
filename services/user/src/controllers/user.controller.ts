@@ -19,10 +19,11 @@ export default class UserController {
   async index(req: Request, res: TypedResponse<APIUser[]>) {
     try {
       // Validate request parameters
-      await indexValidator(req, res)
+      const validated = await indexValidator(req, res)
+      const { fullName, ...pagination } = validated
 
       // Get users from the database
-      const users = await userRepository.index()
+      const users = await userRepository.index(pagination, { fullName })
 
       // Send the response after we transform the data
       res.json(transformUserArray(users))

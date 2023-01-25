@@ -19,10 +19,11 @@ export default class SaleController {
   async index(req: Request, res: TypedResponse<APISale[]>) {
     try {
       // Validate request parameters
-      await indexValidator(req, res)
+      const validated = await indexValidator(req, res)
+      const { ...pagination } = validated
 
       // Fetch sales from database
-      const sales = await saleRepository.index()
+      const sales = await saleRepository.index(pagination, {})
 
       // Send the response after we transform the data
       res.json(transformSaleArray(sales))
