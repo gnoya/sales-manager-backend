@@ -25,7 +25,7 @@ export default class ProductService implements ContractProductService {
       .get(`${this.url}/products/${id}`)
       .catch(catcher(this.req, this.res))
 
-    return response.data as APIProduct
+    return response.data.data as APIProduct
   }
 
   async subtract(id: string): Promise<void> {

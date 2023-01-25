@@ -26,6 +26,16 @@ export default class ProductRepository {
     })
   }
 
+  async countAll(filters: { name?: string }): Promise<number> {
+    return prisma.product.count({
+      where: {
+        name: {
+          contains: filters.name || '',
+        },
+      },
+    })
+  }
+
   async show(id: string): Promise<Product | null> {
     return prisma.product.findFirst({ where: { id } })
   }

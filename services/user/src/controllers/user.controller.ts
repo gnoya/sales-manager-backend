@@ -16,7 +16,13 @@ const userRepository = new UserRepository()
 export default class UserController {
   /*
    */
-  async index(req: Request, res: TypedResponse<APIUser[]>) {
+  async index(
+    req: Request,
+    res: TypedResponse<{
+      data: APIUser[]
+      links: { count: number; pages: number }
+    }>
+  ) {
     try {
       // Validate request parameters
       const validated = await indexValidator(req, res)
@@ -25,8 +31,12 @@ export default class UserController {
       // Get users from the database
       const users = await userRepository.index(pagination, { fullName })
 
+      // Pagination information
+      const count = await userRepository.countAll({ fullName })
+      const pages = Math.ceil(count / (pagination.limit || 10))
+
       // Send the response after we transform the data
-      res.json(transformUserArray(users))
+      res.json({ data: transformUserArray(users), links: { count, pages } })
     } catch (error) {
       internal(req, res, error)
     }
@@ -34,7 +44,7 @@ export default class UserController {
 
   /*
    */
-  async show(req: Request, res: TypedResponse<APIUser>) {
+  async show(req: Request, res: TypedResponse<{ data: APIUser }>) {
     try {
       // Validate request parameters
       const validated = await showValidator(req, res)
@@ -49,7 +59,7 @@ export default class UserController {
       }
 
       // Send the response after we transform the data
-      res.json(transformUser(user))
+      res.json({ data: transformUser(user) })
     } catch (error) {
       internal(req, res, error)
     }
@@ -57,7 +67,7 @@ export default class UserController {
 
   /*
    */
-  async create(req: Request, res: TypedResponse<APIUser>) {
+  async create(req: Request, res: TypedResponse<{ data: APIUser }>) {
     try {
       // Validate request parameters
       const validated = await storeValidator(req, res)
@@ -66,7 +76,7 @@ export default class UserController {
       const user = await userRepository.store(validated as User)
 
       // Send the response after we transform the data
-      res.status(201).json(transformUser(user))
+      res.status(201).json({ data: transformUser(user) })
     } catch (error) {
       internal(req, res, error)
     }
@@ -91,7 +101,7 @@ export default class UserController {
 
   /*
    */
-  async showByEmail(req: Request, res: TypedResponse<APIUser>) {
+  async showByEmail(req: Request, res: TypedResponse<{ data: APIUser }>) {
     try {
       // Validate request parameters
       const validated = await showByEmailValidator(req, res)
@@ -110,7 +120,7 @@ export default class UserController {
       transformedUser.password = user.password
 
       // Send the response after we transform the data
-      res.json(transformedUser)
+      res.json({ data: transformedUser })
     } catch (error) {
       internal(req, res, error)
     }

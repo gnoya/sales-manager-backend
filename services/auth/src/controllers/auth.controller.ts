@@ -14,7 +14,10 @@ const jwtRepository = new JWTRepository()
 export default class AuthController {
   /*
    */
-  async login(req: Request, res: TypedResponse<APIUser & { token: string }>) {
+  async login(
+    req: Request,
+    res: TypedResponse<{ data: APIUser & { token: string } }>
+  ) {
     try {
       // Validate request parameters
       const validated = await loginValidator(req, res)
@@ -46,7 +49,7 @@ export default class AuthController {
       delete user.password
 
       // Return the user
-      res.json({ ...user, token })
+      res.json({ data: { ...user, token } })
     } catch (error) {
       internal(req, res, error)
     }

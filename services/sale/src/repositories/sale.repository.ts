@@ -21,6 +21,10 @@ export default class SaleRepository {
     })
   }
 
+  async countAll(filters: {}): Promise<number> {
+    return prisma.sale.count()
+  }
+
   async show(id: string): Promise<Sale | null> {
     return prisma.sale.findFirst({ where: { id } })
   }

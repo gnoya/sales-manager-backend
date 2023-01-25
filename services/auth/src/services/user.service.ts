@@ -19,7 +19,7 @@ export default class UserService implements ContractUserService {
   async showByEmail(email: string) {
     try {
       const response = await axios.get(`${this.url}/users/email/${email}`)
-      return response.data as APIUser
+      return response.data.data as APIUser
     } catch (err) {
       return null
     }

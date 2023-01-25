@@ -26,6 +26,16 @@ export default class UserRepository {
     })
   }
 
+  async countAll(filters: { fullName?: string }): Promise<number> {
+    return prisma.user.count({
+      where: {
+        fullName: {
+          contains: filters.fullName || '',
+        },
+      },
+    })
+  }
+
   async show(id: string): Promise<User | null> {
     return prisma.user.findFirst({ where: { id } })
   }

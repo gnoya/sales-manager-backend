@@ -16,7 +16,13 @@ const saleRepository = new SaleRepository()
 export default class SaleController {
   /*
    */
-  async index(req: Request, res: TypedResponse<APISale[]>) {
+  async index(
+    req: Request,
+    res: TypedResponse<{
+      data: APISale[]
+      links: { count: number; pages: number }
+    }>
+  ) {
     try {
       // Validate request parameters
       const validated = await indexValidator(req, res)
@@ -25,8 +31,12 @@ export default class SaleController {
       // Fetch sales from database
       const sales = await saleRepository.index(pagination, {})
 
+      // Pagination information
+      const count = await saleRepository.countAll({})
+      const pages = Math.ceil(count / (pagination.limit || 10))
+
       // Send the response after we transform the data
-      res.json(transformSaleArray(sales))
+      res.json({ data: transformSaleArray(sales), links: { count, pages } })
     } catch (error) {
       internal(req, res, error)
     }
@@ -34,7 +44,7 @@ export default class SaleController {
 
   /*
    */
-  async show(req: Request, res: TypedResponse<APISale>) {
+  async show(req: Request, res: TypedResponse<{ data: APISale }>) {
     try {
       // Validate request parameters
       const validated = await showValidator(req, res)
@@ -49,7 +59,7 @@ export default class SaleController {
       }
 
       // Send the response after we transform the data
-      res.json(transformSale(sale))
+      res.json({ data: transformSale(sale) })
     } catch (error) {
       internal(req, res, error)
     }
@@ -57,7 +67,7 @@ export default class SaleController {
 
   /*
    */
-  async create(req: Request, res: TypedResponse<APISale>) {
+  async create(req: Request, res: TypedResponse<{ data: APISale }>) {
     try {
       // Validate request parameters
       const { product, user, ...validated } = await storeValidator(req, res)
@@ -75,7 +85,7 @@ export default class SaleController {
       const sale = await saleRepository.store(newSale as Sale)
 
       // Send the response after we transform the data
-      res.status(201).json(transformSale(sale))
+      res.status(201).json({ data: transformSale(sale) })
     } catch (error) {
       internal(req, res, error)
     }

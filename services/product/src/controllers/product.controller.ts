@@ -19,7 +19,13 @@ const productRepository = new ProductRepository()
 export default class ProductController {
   /*
    */
-  async index(req: Request, res: TypedResponse<APIProduct[]>) {
+  async index(
+    req: Request,
+    res: TypedResponse<{
+      data: APIProduct[]
+      links: { count: number; pages: number }
+    }>
+  ) {
     try {
       // Validate request parameters
       const validated = await indexValidator(req, res)
@@ -28,8 +34,15 @@ export default class ProductController {
       // Fetch products from the database
       const products = await productRepository.index(pagination, { name })
 
+      // Pagination information
+      const count = await productRepository.countAll({ name })
+      const pages = Math.ceil(count / (pagination.limit || 10))
+
       // Send the response after we transform the data
-      res.json(transformProductArray(products))
+      res.json({
+        data: transformProductArray(products),
+        links: { count, pages },
+      })
     } catch (error) {
       internal(req, res, error)
     }
@@ -37,7 +50,7 @@ export default class ProductController {
 
   /*
    */
-  async show(req: Request, res: TypedResponse<APIProduct>) {
+  async show(req: Request, res: TypedResponse<{ data: APIProduct }>) {
     try {
       // Validate request parameters
       const validated = await showValidator(req, res)
@@ -52,7 +65,7 @@ export default class ProductController {
       }
 
       // Send the response after we transform the data
-      res.json(transformProduct(product))
+      res.json({ data: transformProduct(product) })
     } catch (error) {
       internal(req, res, error)
     }
@@ -60,7 +73,7 @@ export default class ProductController {
 
   /*
    */
-  async create(req: Request, res: TypedResponse<APIProduct>) {
+  async create(req: Request, res: TypedResponse<{ data: APIProduct }>) {
     try {
       // Validate request parameters
       const validated = await storeValidator(req, res)
@@ -69,7 +82,7 @@ export default class ProductController {
       const product = await productRepository.store(validated as Product)
 
       // Send the response after we transform the data
-      res.status(201).json(transformProduct(product))
+      res.status(201).json({ data: transformProduct(product) })
     } catch (error) {
       internal(req, res, error)
     }
@@ -77,7 +90,7 @@ export default class ProductController {
 
   /*
    */
-  async update(req: Request, res: Response) {
+  async update(req: Request, res: TypedResponse<{ data: APIProduct }>) {
     try {
       // Validate request parameters
       const validated = await updateValidator(req, res)
@@ -89,7 +102,7 @@ export default class ProductController {
       )
 
       // Send the response after we transform the data
-      res.status(202).json(transformProduct(product))
+      res.status(202).json({ data: transformProduct(product) })
     } catch (error) {
       internal(req, res, error)
     }
