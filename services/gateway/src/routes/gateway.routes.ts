@@ -8,6 +8,8 @@ const gateway = Router()
 gateway.post('/auth/login', gatewayController.gateway)
 
 gateway.get('/users', JWTMiddleware, gatewayController.gateway)
+gateway.get('/users/batch', JWTMiddleware, gatewayController.gateway)
+gateway.get('/users/:id', JWTMiddleware, gatewayController.gateway)
 gateway.post('/users', JWTMiddleware, gatewayController.gateway)
 gateway.delete('/users/:id', JWTMiddleware, gatewayController.gateway)
 

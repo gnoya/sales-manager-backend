@@ -10,6 +10,7 @@ import { ResourceNotFoundError } from '../errors/common'
 import storeValidator from '../validators/user/store.validator'
 import { User } from '@prisma/client'
 import showByEmailValidator from '../validators/user/show-by-email.validator'
+import batchValidator from '../validators/user/batch.validator'
 
 const userRepository = new UserRepository()
 
@@ -37,6 +38,23 @@ export default class UserController {
 
       // Send the response after we transform the data
       res.json({ data: transformUserArray(users), links: { count, pages } })
+    } catch (error) {
+      internal(req, res, error)
+    }
+  }
+
+  /*
+   */
+  async batch(req: Request, res: TypedResponse<{ data: APIUser[] }>) {
+    try {
+      // Validate request parameters
+      const validated = await batchValidator(req, res)
+
+      // Get users in batch from the database
+      const users = await userRepository.batch(validated.ids)
+
+      // Send the response after we transform the data
+      res.json({ data: transformUserArray(users) })
     } catch (error) {
       internal(req, res, error)
     }

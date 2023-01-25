@@ -26,6 +26,16 @@ export default class UserRepository {
     })
   }
 
+  async batch(ids: string[]): Promise<User[]> {
+    return prisma.user.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    })
+  }
+
   async countAll(filters: { fullName?: string }): Promise<number> {
     return prisma.user.count({
       where: {

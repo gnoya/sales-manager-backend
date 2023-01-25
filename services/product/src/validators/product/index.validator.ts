@@ -14,10 +14,9 @@ export default async function indexValidator(req: Request, res: Response) {
   )
 
   const fields = {
-    name: req.query.name,
     page: req.query.page && +req.query.page,
     limit: req.query.limit && +req.query.limit,
-    ...R.pick([''], req.params),
+    ...R.pick(['name'], req.params),
   }
 
   const validated = await schema
